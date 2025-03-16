@@ -17,6 +17,9 @@ import NotFound from "./pages/NotFound";
 import SeatReservation from "./pages/SeatReservation";
 import PaymentPage from "./pages/PaymentPage";
 import UserManagement from "./pages/UserManagement";
+import BookListingPage from "./pages/BookListingPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 
 const queryClient = new QueryClient();
 
@@ -32,16 +35,21 @@ const App = () => (
             <Route path="/home" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/books" element={<BookListingPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             
             {/* Student Dashboard Routes */}
             <Route path="/student-dashboard" element={<StudentDashboard />} />
             <Route path="/student-dashboard/reservations" element={<SeatReservation />} />
             <Route path="/student-dashboard/payments" element={<PaymentPage />} />
+            <Route path="/student-dashboard/books" element={<BookListingPage />} />
             <Route path="/student-dashboard/*" element={<StudentDashboard />} />
             
             {/* Librarian Dashboard Routes */}
             <Route path="/librarian-dashboard" element={<LibrarianDashboard />} />
             <Route path="/librarian-dashboard/students" element={<UserManagement />} />
+            <Route path="/librarian-dashboard/books" element={<BookListingPage />} />
             <Route path="/librarian-dashboard/*" element={<LibrarianDashboard />} />
             
             {/* Catch-all Route */}

@@ -1,159 +1,179 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { User, KeyRound, Mail, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Loader2, Mail, Google } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Logo } from "@/components/Logo";
 
 interface AuthFormProps {
   type: "login" | "signup";
-  userType?: "student" | "librarian";
+  userType: "student" | "librarian";
 }
 
-export function AuthForm({ type, userType = "student" }: AuthFormProps) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: "",
-    userType: userType,
-  });
-  const { toast } = useToast();
+export function AuthForm({ type, userType }: AuthFormProps) {
   const navigate = useNavigate();
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     // Simulate authentication
-    if (type === "login") {
-      // Mock login logic - in a real app, you'd call an API
-      if (formData.email && formData.password) {
+    setTimeout(() => {
+      setIsLoading(false);
+      
+      if (type === "login") {
         toast({
-          title: "Logged in successfully",
-          description: `Welcome back ${
-            userType === "librarian" ? "librarian" : "to EduPulse"
-          }!`,
+          title: "Login successful",
+          description: `Welcome back to EduPulse Library!`,
         });
         
         // Redirect based on user type
-        if (userType === "librarian") {
-          navigate("/librarian-dashboard");
-        } else {
-          navigate("/student-dashboard");
-        }
+        navigate(userType === "student" ? "/student-dashboard" : "/librarian-dashboard");
       } else {
-        toast({
-          title: "Login failed",
-          description: "Please check your credentials and try again",
-          variant: "destructive",
-        });
-      }
-    } else {
-      // Mock signup logic
-      if (formData.email && formData.password) {
         toast({
           title: "Account created",
-          description: "Your account has been created successfully!",
+          description: "Your account has been created successfully.",
         });
+        
+        // Redirect to login page after signup
         navigate("/login");
-      } else {
-        toast({
-          title: "Signup failed",
-          description: "Please complete all fields and try again",
-          variant: "destructive",
-        });
       }
+    }, 1500);
+  };
+  
+  const handleGoogleAuth = () => {
+    setIsLoading(true);
+    
+    // Simulate Google auth
+    setTimeout(() => {
+      setIsLoading(false);
+      
+      toast({
+        title: "Google authentication",
+        description: "Successfully authenticated with Google.",
+      });
+      
+      // Redirect based on user type
+      navigate(userType === "student" ? "/student-dashboard" : "/librarian-dashboard");
+    }, 1500);
+  };
+
+  const handleForgotPassword = () => {
+    if (!email) {
+      toast({
+        title: "Email required",
+        description: "Please enter your email address first.",
+        variant: "destructive",
+      });
+      return;
     }
+    
+    toast({
+      title: "Password reset email sent",
+      description: `We've sent a password reset link to ${email}`,
+    });
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto glass-card">
-      <CardHeader className="space-y-3">
-        <div className="flex justify-center mb-4">
-          <Logo />
-        </div>
-        <CardTitle className="text-2xl text-center">
-          {type === "login" ? "Library Login" : "Library Enrollment"}
-        </CardTitle>
-        <CardDescription className="text-center">
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>{type === "login" ? "Login" : "Create an Account"}</CardTitle>
+        <CardDescription>
           {type === "login"
-            ? "Enter your credentials to access the library system"
-            : "Create an account to access the library services"}
+            ? `Sign in to your ${userType} account`
+            : `Register a new ${userType} account`}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit}>
+        <CardContent className="space-y-4">
           {type === "signup" && (
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
                 <Input
                   id="name"
-                  name="name"
                   placeholder="Enter your full name"
-                  className="pl-10"
-                  value={formData.name}
-                  onChange={handleInputChange}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   required
                 />
               </div>
-            </div>
+              
+              {userType === "student" && (
+                <div className="space-y-2">
+                  <Label htmlFor="rollNumber">Roll Number</Label>
+                  <Input
+                    id="rollNumber"
+                    placeholder="Enter your roll number"
+                    value={rollNumber}
+                    onChange={(e) => setRollNumber(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
+            </>
           )}
+          
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
-                name="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="m@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
-                value={formData.email}
-                onChange={handleInputChange}
                 required
               />
             </div>
           </div>
+          
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password">Password</Label>
+              {type === "login" && (
+                <Button 
+                  type="button" 
+                  variant="link" 
+                  className="px-0 font-normal text-xs"
+                  onClick={handleForgotPassword}
+                >
+                  Forgot password?
+                </Button>
+              )}
+            </div>
             <div className="relative">
-              <KeyRound className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
               <Input
                 id="password"
-                name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                className="pl-10 pr-10"
-                value={formData.password}
-                onChange={handleInputChange}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <Button
                 type="button"
                 variant="ghost"
-                size="icon"
-                className="absolute right-0 top-0 h-10 w-10"
-                onClick={togglePasswordVisibility}
+                size="sm"
+                className="absolute right-0 top-0 h-10 w-10 px-3"
+                onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <EyeOff className="h-5 w-5 text-muted-foreground" />
+                  <EyeOff className="h-4 w-4" />
                 ) : (
-                  <Eye className="h-5 w-5 text-muted-foreground" />
+                  <Eye className="h-4 w-4" />
                 )}
                 <span className="sr-only">
                   {showPassword ? "Hide password" : "Show password"}
@@ -161,32 +181,71 @@ export function AuthForm({ type, userType = "student" }: AuthFormProps) {
               </Button>
             </div>
           </div>
-          {type === "login" && (
-            <div className="text-right">
-              <a
-                href="#"
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                Forgot password?
-              </a>
-            </div>
-          )}
-          <Button type="submit" className="w-full gradient-button">
-            {type === "login" ? "Log in" : "Sign up"}
-          </Button>
-        </form>
-      </CardContent>
-      <CardFooter className="flex justify-center">
-        <p className="text-sm text-muted-foreground">
-          {type === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
-          <a
-            href={type === "login" ? "/signup" : "/login"}
-            className="font-medium text-primary hover:underline"
+        </CardContent>
+        
+        <CardFooter className="flex flex-col">
+          <Button
+            type="submit"
+            className="w-full gradient-button"
+            disabled={isLoading}
           >
-            {type === "login" ? "Sign up" : "Log in"}
-          </a>
-        </p>
-      </CardFooter>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {type === "login" ? "Logging in..." : "Creating account..."}
+              </>
+            ) : (
+              type === "login" ? "Log in" : "Create account"
+            )}
+          </Button>
+          
+          <div className="relative my-4 w-full">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogleAuth}
+            disabled={isLoading}
+          >
+            <Google className="mr-2 h-4 w-4" />
+            Google
+          </Button>
+          
+          <div className="mt-4 text-center text-sm">
+            {type === "login" ? (
+              <>
+                Don't have an account?{" "}
+                <Link
+                  to="/signup"
+                  className="underline underline-offset-4 hover:text-primary"
+                >
+                  Sign up
+                </Link>
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="underline underline-offset-4 hover:text-primary"
+                >
+                  Log in
+                </Link>
+              </>
+            )}
+          </div>
+        </CardFooter>
+      </form>
     </Card>
   );
 }

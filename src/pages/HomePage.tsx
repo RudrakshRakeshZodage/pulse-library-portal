@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Book, CreditCard, CalendarCheck, User, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
+import { Logo } from "@/components/Logo"; // Added missing import
 import { FeatureCard } from "@/components/FeatureCard";
 
 export default function HomePage() {
