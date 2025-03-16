@@ -7,12 +7,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 // Pages
+import Index from "./pages/Index";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import StudentDashboard from "./pages/StudentDashboard";
 import LibrarianDashboard from "./pages/LibrarianDashboard";
 import NotFound from "./pages/NotFound";
+import SeatReservation from "./pages/SeatReservation";
+import PaymentPage from "./pages/PaymentPage";
+import UserManagement from "./pages/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -24,16 +28,20 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             
             {/* Student Dashboard Routes */}
             <Route path="/student-dashboard" element={<StudentDashboard />} />
+            <Route path="/student-dashboard/reservations" element={<SeatReservation />} />
+            <Route path="/student-dashboard/payments" element={<PaymentPage />} />
             <Route path="/student-dashboard/*" element={<StudentDashboard />} />
             
             {/* Librarian Dashboard Routes */}
             <Route path="/librarian-dashboard" element={<LibrarianDashboard />} />
+            <Route path="/librarian-dashboard/students" element={<UserManagement />} />
             <Route path="/librarian-dashboard/*" element={<LibrarianDashboard />} />
             
             {/* Catch-all Route */}
