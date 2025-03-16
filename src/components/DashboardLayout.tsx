@@ -10,7 +10,8 @@ import {
   Settings, 
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Bell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -18,7 +19,22 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Sidebar, SidebarProvider, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from "@/components/ui/sidebar";
+import { 
+  Sidebar, 
+  SidebarProvider, 
+  SidebarTrigger, 
+  SidebarContent, 
+  SidebarHeader, 
+  SidebarMenu, 
+  SidebarMenuItem, 
+  SidebarMenuButton, 
+  SidebarFooter 
+} from "@/components/ui/sidebar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -56,6 +72,13 @@ export function DashboardLayout({ children, userType }: DashboardLayoutProps) {
     { icon: Settings, name: "Settings", path: "/librarian-dashboard/settings" },
   ];
 
+  const notifications = [
+    { id: 1, title: "New Book Request", description: "Priya Sharma requested 'Advanced Algorithms'", time: "10 minutes ago" },
+    { id: 2, title: "Seat Reservation", description: "Raj Patel reserved seat A15", time: "30 minutes ago" },
+    { id: 3, title: "Payment Received", description: "Ankit Kumar paid ₹150 for late fees", time: "1 hour ago" },
+    { id: 4, title: "Book Return", description: "Meera Singh returned 'Data Structures'", time: "2 hours ago" },
+  ];
+
   const links = userType === "student" ? studentLinks : librarianLinks;
 
   return (
@@ -69,7 +92,7 @@ export function DashboardLayout({ children, userType }: DashboardLayoutProps) {
             <SidebarMenu>
               {links.map((link) => (
                 <SidebarMenuItem key={link.path}>
-                  <SidebarMenuButton asChild active={location.pathname === link.path}>
+                  <SidebarMenuButton asChild isActive={location.pathname === link.path}>
                     <Link to={link.path} className="flex items-center gap-3 px-3 py-2">
                       <link.icon className="h-5 w-5" />
                       <span>{link.name}</span>
@@ -99,7 +122,31 @@ export function DashboardLayout({ children, userType }: DashboardLayoutProps) {
             <h1 className="font-semibold flex-1">
               {links.find(link => location.pathname === link.path)?.name || "Dashboard"}
             </h1>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="icon" className="relative">
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                      {notifications.length}
+                    </span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-0 max-h-[60vh] overflow-auto" align="end">
+                  <div className="p-4 border-b border-border">
+                    <h3 className="font-semibold">Notifications</h3>
+                  </div>
+                  <div className="divide-y divide-border">
+                    {notifications.map((notification) => (
+                      <div key={notification.id} className="p-4 hover:bg-muted transition-colors cursor-pointer">
+                        <div className="font-medium">{notification.title}</div>
+                        <div className="text-sm text-muted-foreground">{notification.description}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{notification.time}</div>
+                      </div>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
               {!isMobile && <ThemeToggle />}
             </div>
           </header>

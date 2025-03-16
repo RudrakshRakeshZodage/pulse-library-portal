@@ -6,7 +6,9 @@ import {
   CreditCard, 
   TrendingUp,
   Bookmark,
-  Activity
+  Activity,
+  Check,
+  X
 } from "lucide-react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,8 +20,44 @@ import {
   TabsTrigger 
 } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 export default function LibrarianDashboard() {
+  const { toast } = useToast();
+
+  const handleApprove = (id: number, studentName: string) => {
+    toast({
+      title: "Reservation Approved",
+      description: `You've approved ${studentName}'s reservation`,
+    });
+  };
+
+  const handleDecline = (id: number, studentName: string) => {
+    toast({
+      title: "Reservation Declined",
+      description: `You've declined ${studentName}'s reservation`,
+    });
+  };
+
   const stats = [
     { 
       title: "Total Books", 
@@ -72,6 +110,32 @@ export default function LibrarianDashboard() {
     { id: 4, action: "Book Returned", details: "Advanced Algorithms by Ankit Kumar", time: "6 hours ago", icon: BookOpen },
   ];
 
+  const bookUsageData = [
+    { month: "Jan", computer: 40, electronics: 24, civil: 18, mechanical: 15, aiml: 35 },
+    { month: "Feb", computer: 45, electronics: 28, civil: 20, mechanical: 22, aiml: 38 },
+    { month: "Mar", computer: 55, electronics: 32, civil: 22, mechanical: 25, aiml: 42 },
+    { month: "Apr", computer: 65, electronics: 35, civil: 25, mechanical: 28, aiml: 48 },
+    { month: "May", computer: 70, electronics: 38, civil: 28, mechanical: 30, aiml: 52 },
+    { month: "Jun", computer: 80, electronics: 42, civil: 30, mechanical: 32, aiml: 58 },
+  ];
+
+  const paymentData = [
+    { name: "Week 1", amount: 1500 },
+    { name: "Week 2", amount: 2800 },
+    { name: "Week 3", amount: 3200 },
+    { name: "Week 4", amount: 4500 },
+  ];
+
+  const reservationData = [
+    { name: "Monday", reservations: 18 },
+    { name: "Tuesday", reservations: 25 },
+    { name: "Wednesday", reservations: 32 },
+    { name: "Thursday", reservations: 28 },
+    { name: "Friday", reservations: 35 },
+    { name: "Saturday", reservations: 42 },
+    { name: "Sunday", reservations: 15 },
+  ];
+
   return (
     <DashboardLayout userType="librarian">
       <div className="space-y-6">
@@ -104,6 +168,147 @@ export default function LibrarianDashboard() {
               </Card>
             );
           })}
+        </div>
+
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Book Usage by Department</CardTitle>
+              <CardDescription>
+                Monthly book checkout statistics by department
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px]">
+                <ChartContainer
+                  config={{
+                    computer: { label: "Computer", color: "#2563eb" },
+                    electronics: { label: "Electronics", color: "#7c3aed" },
+                    civil: { label: "Civil", color: "#059669" },
+                    mechanical: { label: "Mechanical", color: "#d97706" },
+                    aiml: { label: "AI ML", color: "#dc2626" },
+                  }}
+                >
+                  <AreaChart
+                    data={bookUsageData}
+                    margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Area
+                      type="monotone"
+                      dataKey="computer"
+                      stackId="1"
+                      stroke="var(--color-computer)"
+                      fill="var(--color-computer)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="electronics"
+                      stackId="1"
+                      stroke="var(--color-electronics)"
+                      fill="var(--color-electronics)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="civil"
+                      stackId="1"
+                      stroke="var(--color-civil)"
+                      fill="var(--color-civil)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="mechanical"
+                      stackId="1"
+                      stroke="var(--color-mechanical)"
+                      fill="var(--color-mechanical)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="aiml"
+                      stackId="1"
+                      stroke="var(--color-aiml)"
+                      fill="var(--color-aiml)"
+                    />
+                    <Legend />
+                  </AreaChart>
+                </ChartContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-1">
+            <Card>
+              <CardHeader>
+                <CardTitle>Weekly Payments</CardTitle>
+                <CardDescription>
+                  Total payment amounts collected weekly
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[140px]">
+                  <ChartContainer
+                    config={{
+                      amount: { label: "Amount (₹)", color: "#16a34a" },
+                    }}
+                  >
+                    <BarChart
+                      data={paymentData}
+                      margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar
+                        dataKey="amount"
+                        fill="var(--color-amount)"
+                        radius={[4, 4, 0, 0]}
+                      />
+                    </BarChart>
+                  </ChartContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Daily Reservations</CardTitle>
+                <CardDescription>
+                  Number of seat reservations per day
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[140px]">
+                  <ChartContainer
+                    config={{
+                      reservations: { label: "Reservations", color: "#8b5cf6" },
+                    }}
+                  >
+                    <LineChart
+                      data={reservationData}
+                      margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Line
+                        type="monotone"
+                        dataKey="reservations"
+                        stroke="var(--color-reservations)"
+                        strokeWidth={2}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ChartContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
@@ -188,10 +393,21 @@ export default function LibrarianDashboard() {
                   <div>{new Date(reservation.date).toLocaleDateString()}</div>
                   <div>{reservation.time}</div>
                   <div className="flex justify-end gap-2">
-                    <Button size="sm" className="gradient-button">
+                    <Button 
+                      size="sm" 
+                      className="gradient-button flex items-center gap-1"
+                      onClick={() => handleApprove(reservation.id, reservation.studentName)}
+                    >
+                      <Check className="h-3.5 w-3.5" />
                       Approve
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="flex items-center gap-1"
+                      onClick={() => handleDecline(reservation.id, reservation.studentName)}
+                    >
+                      <X className="h-3.5 w-3.5" />
                       Decline
                     </Button>
                   </div>
