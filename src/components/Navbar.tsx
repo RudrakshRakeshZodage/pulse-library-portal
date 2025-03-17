@@ -23,6 +23,11 @@ export function Navbar() {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setIsOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -51,6 +56,7 @@ export function Navbar() {
                   ? "text-foreground after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-gradient-edupulse"
                   : "text-muted-foreground"
               )}
+              onClick={() => handleNavigation(link.path)}
             >
               {link.name}
             </Link>

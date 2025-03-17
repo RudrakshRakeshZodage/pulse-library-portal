@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 import {
   Area,
   AreaChart,
@@ -43,6 +44,7 @@ import {
 
 export default function LibrarianDashboard() {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleApprove = (id: number, studentName: string) => {
     toast({
@@ -55,6 +57,36 @@ export default function LibrarianDashboard() {
     toast({
       title: "Reservation Declined",
       description: `You've declined ${studentName}'s reservation`,
+    });
+  };
+
+  const handleAddBook = () => {
+    navigate("/librarian-dashboard/books");
+    toast({
+      title: "Add Book",
+      description: "Navigated to book management page"
+    });
+  };
+
+  const handleAddStudent = () => {
+    navigate("/librarian-dashboard/students");
+    toast({
+      title: "Add Student",
+      description: "Navigated to student management page"
+    });
+  };
+
+  const handleRunReports = () => {
+    toast({
+      title: "Generate Reports",
+      description: "Report generation started"
+    });
+  };
+
+  const handleSystemStatus = () => {
+    toast({
+      title: "System Status",
+      description: "All systems operational"
     });
   };
 
@@ -171,140 +203,142 @@ export default function LibrarianDashboard() {
         </div>
 
         <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-          <Card>
+          <Card className="w-full">
             <CardHeader>
               <CardTitle>Book Usage by Department</CardTitle>
               <CardDescription>
                 Monthly book checkout statistics by department
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-[300px]">
-                <ChartContainer
-                  config={{
-                    computer: { label: "Computer", color: "#2563eb" },
-                    electronics: { label: "Electronics", color: "#7c3aed" },
-                    civil: { label: "Civil", color: "#059669" },
-                    mechanical: { label: "Mechanical", color: "#d97706" },
-                    aiml: { label: "AI ML", color: "#dc2626" },
-                  }}
-                >
+            <CardContent className="p-0 pb-4">
+              <div className="h-[300px] w-full px-2">
+                <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
                     data={bookUsageData}
-                    margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                    margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'var(--background)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '8px'
+                      }}
+                    />
                     <Area
                       type="monotone"
                       dataKey="computer"
                       stackId="1"
-                      stroke="var(--color-computer)"
-                      fill="var(--color-computer)"
+                      stroke="#2563eb"
+                      fill="#2563eb"
                     />
                     <Area
                       type="monotone"
                       dataKey="electronics"
                       stackId="1"
-                      stroke="var(--color-electronics)"
-                      fill="var(--color-electronics)"
+                      stroke="#7c3aed"
+                      fill="#7c3aed"
                     />
                     <Area
                       type="monotone"
                       dataKey="civil"
                       stackId="1"
-                      stroke="var(--color-civil)"
-                      fill="var(--color-civil)"
+                      stroke="#059669"
+                      fill="#059669"
                     />
                     <Area
                       type="monotone"
                       dataKey="mechanical"
                       stackId="1"
-                      stroke="var(--color-mechanical)"
-                      fill="var(--color-mechanical)"
+                      stroke="#d97706"
+                      fill="#d97706"
                     />
                     <Area
                       type="monotone"
                       dataKey="aiml"
                       stackId="1"
-                      stroke="var(--color-aiml)"
-                      fill="var(--color-aiml)"
+                      stroke="#dc2626"
+                      fill="#dc2626"
                     />
                     <Legend />
                   </AreaChart>
-                </ChartContainer>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
 
-          <div className="grid gap-6 grid-cols-1 lg:grid-cols-1">
-            <Card>
+          <div className="grid gap-6 grid-cols-1">
+            <Card className="w-full">
               <CardHeader>
                 <CardTitle>Weekly Payments</CardTitle>
                 <CardDescription>
                   Total payment amounts collected weekly
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="h-[140px]">
-                  <ChartContainer
-                    config={{
-                      amount: { label: "Amount (₹)", color: "#16a34a" },
-                    }}
-                  >
+              <CardContent className="p-0 pb-4">
+                <div className="h-[140px] w-full px-2">
+                  <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={paymentData}
-                      margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                      margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'var(--background)',
+                          border: '1px solid var(--border)',
+                          borderRadius: '8px'
+                        }}
+                      />
                       <Bar
                         dataKey="amount"
-                        fill="var(--color-amount)"
+                        fill="#16a34a"
                         radius={[4, 4, 0, 0]}
                       />
                     </BarChart>
-                  </ChartContainer>
+                  </ResponsiveContainer>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="w-full">
               <CardHeader>
                 <CardTitle>Daily Reservations</CardTitle>
                 <CardDescription>
                   Number of seat reservations per day
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="h-[140px]">
-                  <ChartContainer
-                    config={{
-                      reservations: { label: "Reservations", color: "#8b5cf6" },
-                    }}
-                  >
+              <CardContent className="p-0 pb-4">
+                <div className="h-[140px] w-full px-2">
+                  <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                       data={reservationData}
-                      margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                      margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'var(--background)',
+                          border: '1px solid var(--border)',
+                          borderRadius: '8px'
+                        }}
+                      />
                       <Line
                         type="monotone"
                         dataKey="reservations"
-                        stroke="var(--color-reservations)"
+                        stroke="#8b5cf6"
                         strokeWidth={2}
                         dot={{ r: 4 }}
                         activeDot={{ r: 6 }}
                       />
                     </LineChart>
-                  </ChartContainer>
+                  </ResponsiveContainer>
                 </div>
               </CardContent>
             </Card>
@@ -423,28 +457,28 @@ export default function LibrarianDashboard() {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 grid-cols-1 md:grid-cols-2">
-              <Button className="flex items-center justify-center gap-2 h-auto py-4">
+              <Button className="flex items-center justify-center gap-2 h-auto py-4" onClick={handleAddBook}>
                 <BookOpen className="h-4 w-4" />
                 <div className="flex flex-col items-start">
                   <span>Add New Book</span>
                   <span className="text-xs font-normal">Catalog a new book</span>
                 </div>
               </Button>
-              <Button variant="outline" className="flex items-center justify-center gap-2 h-auto py-4">
+              <Button variant="outline" className="flex items-center justify-center gap-2 h-auto py-4" onClick={handleAddStudent}>
                 <Users className="h-4 w-4" />
                 <div className="flex flex-col items-start">
                   <span>Add Student</span>
                   <span className="text-xs font-normal">Register a new student</span>
                 </div>
               </Button>
-              <Button variant="outline" className="flex items-center justify-center gap-2 h-auto py-4">
+              <Button variant="outline" className="flex items-center justify-center gap-2 h-auto py-4" onClick={handleRunReports}>
                 <TrendingUp className="h-4 w-4" />
                 <div className="flex flex-col items-start">
                   <span>Run Reports</span>
                   <span className="text-xs font-normal">Generate custom reports</span>
                 </div>
               </Button>
-              <Button variant="outline" className="flex items-center justify-center gap-2 h-auto py-4">
+              <Button variant="outline" className="flex items-center justify-center gap-2 h-auto py-4" onClick={handleSystemStatus}>
                 <Activity className="h-4 w-4" />
                 <div className="flex flex-col items-start">
                   <span>System Status</span>

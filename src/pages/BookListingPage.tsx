@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 
 // Book types and mock data
 type Department = "AI ML" | "CO" | "EJ" | "CIVIL" | "ME";
-type Year = "FYAN" | "FYCE" | "TYCO" | "SYEJ";
+type Year = "FY" | "SY" | "TY";
 
 interface Book {
   id: number;
@@ -46,97 +46,221 @@ export default function BookListingPage() {
   const [yearFilter, setYearFilter] = useState<string>("");
 
   useEffect(() => {
-    // In a real app, this would be an API call
-    const mockBooks: Book[] = [
+    // Realistic polytechnic books data
+    const polytechnicBooks: Book[] = [
+      // Computer Engineering (CO) Books
       {
         id: 1,
-        title: "Data Structures and Algorithms",
-        author: "Thomas H. Cormen",
-        description: "Introduction to algorithms and data structures for computer science students",
+        title: "Programming in C",
+        author: "E. Balagurusamy",
+        description: "A comprehensive guide to C programming for polytechnic students",
         department: "CO",
-        year: "FYAN",
+        year: "FY",
         available: true,
-        coverUrl: "https://picsum.photos/seed/books1/300/400"
+        coverUrl: "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
       },
       {
         id: 2,
-        title: "Artificial Intelligence: A Modern Approach",
-        author: "Stuart Russell, Peter Norvig",
-        description: "Comprehensive introduction to the theory and practice of artificial intelligence",
-        department: "AI ML",
-        year: "TYCO",
+        title: "Database Management Systems",
+        author: "Dr. S.S. Sane",
+        description: "An introduction to database concepts and SQL for computer engineering students",
+        department: "CO",
+        year: "SY",
         available: true,
-        coverUrl: "https://picsum.photos/seed/books2/300/400"
+        coverUrl: "https://images.unsplash.com/photo-1489875347897-49f64b51c1f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
       },
       {
         id: 3,
-        title: "Digital Electronics",
-        author: "Morris Mano",
-        description: "Digital design principles and practices",
-        department: "EJ",
-        year: "SYEJ",
+        title: "Web Development Technologies",
+        author: "V.K. Jain",
+        description: "HTML, CSS, JavaScript and modern frameworks for web development",
+        department: "CO",
+        year: "TY",
         available: false,
-        coverUrl: "https://picsum.photos/seed/books3/300/400"
+        coverUrl: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
       },
       {
         id: 4,
-        title: "Structural Engineering",
-        author: "P.C. Varghese",
-        description: "Fundamentals of structural engineering and analysis",
-        department: "CIVIL",
-        year: "FYCE",
+        title: "Data Structures Using C++",
+        author: "D.S. Malik",
+        description: "Implementation of advanced data structures in C++ with applications",
+        department: "CO",
+        year: "SY",
         available: true,
-        coverUrl: "https://picsum.photos/seed/books4/300/400"
+        coverUrl: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
       },
+      
+      // Electronics Engineering (EJ) Books
       {
         id: 5,
-        title: "Thermodynamics",
-        author: "Y.A. Cengel",
-        description: "Engineering approach to thermodynamics",
-        department: "ME",
-        year: "FYAN",
+        title: "Digital Electronics",
+        author: "Morris Mano",
+        description: "Principles and applications of digital circuits and systems",
+        department: "EJ",
+        year: "FY",
         available: true,
-        coverUrl: "https://picsum.photos/seed/books5/300/400"
+        coverUrl: "https://images.unsplash.com/photo-1563770557287-ea346329d7e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 6,
+        title: "Microprocessors and Microcontrollers",
+        author: "Ramesh Gaonkar",
+        description: "Architecture and programming of microprocessors with practical applications",
+        department: "EJ",
+        year: "SY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1597589827317-4c6d6e0a90bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 7,
+        title: "Communication Systems",
+        author: "Simon Haykin",
+        description: "Principles of analog and digital communication with modern techniques",
+        department: "EJ",
+        year: "TY",
+        available: false,
+        coverUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 8,
+        title: "Electronic Devices and Circuits",
+        author: "J.B. Gupta",
+        description: "Fundamentals of electronic components and circuit design",
+        department: "EJ",
+        year: "FY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1611175694989-4c05c0945e—-s6Dw?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      
+      // Mechanical Engineering (ME) Books
+      {
+        id: 9,
+        title: "Thermodynamics",
+        author: "P.K. Nag",
+        description: "Principles of thermal energy and its applications in engineering",
+        department: "ME",
+        year: "SY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1534190239940-9ba8944ea261?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 10,
+        title: "Machine Design",
+        author: "V.B. Bhandari",
+        description: "Design principles for mechanical components and systems",
+        department: "ME",
+        year: "TY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 11,
+        title: "Fluid Mechanics",
+        author: "R.K. Bansal",
+        description: "Principles of fluid behavior and its engineering applications",
+        department: "ME",
+        year: "FY",
+        available: false,
+        coverUrl: "https://images.unsplash.com/photo-1501159599894-155982264a55?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 12,
+        title: "Strength of Materials",
+        author: "R.S. Khurmi",
+        description: "Analysis of material properties and structural behavior under loads",
+        department: "ME",
+        year: "SY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      
+      // Civil Engineering (CIVIL) Books
+      {
+        id: 13,
+        title: "Surveying",
+        author: "B.C. Punmia",
+        description: "Principles and methods of land surveying for civil engineers",
+        department: "CIVIL",
+        year: "FY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1580894742597-87bc8789db3d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 14,
+        title: "Structural Analysis",
+        author: "S.S. Bhavikatti",
+        description: "Analysis techniques for civil engineering structures",
+        department: "CIVIL",
+        year: "SY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1494412519320-aa613df58c24?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 15,
+        title: "Concrete Technology",
+        author: "M.S. Shetty",
+        description: "Properties, testing, and applications of concrete in construction",
+        department: "CIVIL",
+        year: "TY",
+        available: false,
+        coverUrl: "https://images.unsplash.com/photo-1564419571004-c25b5f9e3365?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 16,
+        title: "Highway Engineering",
+        author: "S.K. Khanna",
+        description: "Planning, design, and construction of highways and transportation systems",
+        department: "CIVIL",
+        year: "SY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1523633589114-88eaf4b4f1a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      
+      // AI and ML (AI ML) Books
+      {
+        id: 17,
+        title: "Introduction to Artificial Intelligence",
+        author: "Stuart Russell",
+        description: "Fundamental concepts and applications of AI for beginners",
+        department: "AI ML",
+        year: "FY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1532522750741-628fba798a31?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 18,
+        title: "Machine Learning for Beginners",
+        author: "Ethem Alpaydin",
+        description: "Basic algorithms and techniques in machine learning",
+        department: "AI ML",
+        year: "SY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 19,
+        title: "Deep Learning Fundamentals",
+        author: "Yoshua Bengio",
+        description: "Neural networks and advanced deep learning techniques",
+        department: "AI ML",
+        year: "TY",
+        available: false,
+        coverUrl: "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 20,
+        title: "Python for Data Science",
+        author: "Jake VanderPlas",
+        description: "Programming with Python for data analysis and visualization",
+        department: "AI ML",
+        year: "FY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
       }
     ];
 
-    // Generate more books for demonstration
-    const generatedBooks: Book[] = [];
-    const departments: Department[] = ["AI ML", "CO", "EJ", "CIVIL", "ME"];
-    const years: Year[] = ["FYAN", "FYCE", "TYCO", "SYEJ"];
-    const titles = [
-      "Introduction to Programming", "Database Systems", "Web Development",
-      "Machine Learning", "Computer Networks", "Operating Systems",
-      "Software Engineering", "Computer Architecture", "Digital Signal Processing",
-      "Control Systems", "Power Electronics", "Embedded Systems",
-      "Fluid Mechanics", "Strength of Materials", "Engineering Graphics",
-      "Material Science", "Manufacturing Processes", "Engineering Mathematics"
-    ];
-    const authors = [
-      "John Smith", "Maria Garcia", "David Brown", "Amit Patel", "Sarah Johnson",
-      "James Wilson", "Linda Martinez", "Robert Taylor", "Emily Anderson", "Michael Thomas"
-    ];
-
-    for (let i = 6; i <= 30; i++) {
-      const randomDept = departments[Math.floor(Math.random() * departments.length)];
-      const randomYear = years[Math.floor(Math.random() * years.length)];
-      const randomTitle = titles[Math.floor(Math.random() * titles.length)];
-      const randomAuthor = authors[Math.floor(Math.random() * authors.length)];
-
-      generatedBooks.push({
-        id: i,
-        title: randomTitle,
-        author: randomAuthor,
-        description: `Comprehensive guide on ${randomTitle.toLowerCase()} for ${randomDept} students`,
-        department: randomDept,
-        year: randomYear,
-        available: Math.random() > 0.3, // 70% chance of being available
-        coverUrl: `https://picsum.photos/seed/books${i}/300/400`
-      });
-    }
-
-    setBooks([...mockBooks, ...generatedBooks]);
-    setFilteredBooks([...mockBooks, ...generatedBooks]);
+    setBooks(polytechnicBooks);
+    setFilteredBooks(polytechnicBooks);
   }, []);
 
   useEffect(() => {
@@ -215,10 +339,9 @@ export default function BookListingPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">All Years</SelectItem>
-                  <SelectItem value="FYAN">First Year</SelectItem>
-                  <SelectItem value="FYCE">Second Year</SelectItem>
-                  <SelectItem value="TYCO">Third Year</SelectItem>
-                  <SelectItem value="SYEJ">Final Year</SelectItem>
+                  <SelectItem value="FY">First Year</SelectItem>
+                  <SelectItem value="SY">Second Year</SelectItem>
+                  <SelectItem value="TY">Third Year</SelectItem>
                 </SelectContent>
               </Select>
               <Button variant="outline" onClick={() => {
@@ -255,6 +378,10 @@ export default function BookListingPage() {
                       src={book.coverUrl} 
                       alt={book.title}
                       className="w-full h-full object-cover transition-transform hover:scale-105"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80";
+                      }}
                     />
                     <div className={`absolute top-2 right-2 px-2 py-1 text-xs font-medium rounded-full ${
                       book.available ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' : 
@@ -304,6 +431,10 @@ export default function BookListingPage() {
                         src={book.coverUrl} 
                         alt={book.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80";
+                        }}
                       />
                     </div>
                     <div className="flex flex-col flex-1 p-4">
