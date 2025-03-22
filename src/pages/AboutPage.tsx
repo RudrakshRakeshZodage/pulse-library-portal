@@ -1,6 +1,6 @@
 
 import { Navbar } from "@/components/Navbar";
-import { Book, BookOpen, CalendarCheck, CreditCard, Users } from "lucide-react";
+import { Book, BookOpen, CalendarCheck, CreditCard, Users, Clock } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -39,6 +39,27 @@ export default function AboutPage() {
                 empowering students with unlimited access to knowledge resources and equipping librarians with powerful 
                 tools to manage and curate these resources effectively.
               </p>
+              
+              <h2>Library Hours</h2>
+              <div className="not-prose bg-card p-6 rounded-lg border shadow-sm mb-6">
+                <div className="h-12 w-12 rounded-full bg-gradient-edupulse flex items-center justify-center mb-4">
+                  <Clock className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Operating Hours</h3>
+                <p className="text-muted-foreground mb-2">
+                  Our library is open during the following hours:
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-medium">Days</h4>
+                    <p>Monday to Friday</p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium">Hours</h4>
+                    <p>8:00 AM - 4:00 PM</p>
+                  </div>
+                </div>
+              </div>
               
               <h2>Core Values</h2>
               <ul>
