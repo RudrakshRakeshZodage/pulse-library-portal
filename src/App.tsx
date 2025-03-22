@@ -20,6 +20,7 @@ import UserManagement from "./pages/UserManagement";
 import BookListingPage from "./pages/BookListingPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import ReservationShowcase from "./pages/ReservationShowcase";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/books" element={<BookListingPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/reservations" element={<ReservationShowcase />} />
             
             {/* Student Dashboard Routes */}
             <Route path="/student-dashboard" element={<StudentDashboard />} />

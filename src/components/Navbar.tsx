@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "Books", path: "/books", icon: BookOpen },
-  { name: "Reservation", path: "/student-dashboard/reservations", icon: CalendarCheck },
+  { name: "Reservation", path: "/reservations", icon: CalendarCheck },
   { name: "About", path: "/about", icon: Users },
   { name: "Contact", path: "/contact", icon: Layers },
 ];
