@@ -277,8 +277,9 @@ export default function LibrarianDashboard() {
                   Total payment amounts collected weekly
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-0 pb-4">
-                <div className="h-[140px] w-full px-2">
+              <CardContent>
+                {/* Modified container height and removed padding */}
+                <div className="h-[200px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={paymentData}
@@ -312,8 +313,9 @@ export default function LibrarianDashboard() {
                   Number of seat reservations per day
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-0 pb-4">
-                <div className="h-[140px] w-full px-2">
+              <CardContent>
+                {/* Modified container height and removed padding */}
+                <div className="h-[200px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                       data={reservationData}
