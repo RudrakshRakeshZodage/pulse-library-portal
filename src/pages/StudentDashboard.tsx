@@ -19,8 +19,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentDashboard() {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  
   const [borrowedBooks, setBorrowedBooks] = useState([
     { 
       id: 1, 
@@ -50,11 +55,39 @@ export default function StudentDashboard() {
         ? { ...book, dueDate: new Date(new Date(book.dueDate).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0] } 
         : book
     ));
+    
+    toast({
+      title: "Book Renewed",
+      description: "Your book has been renewed for 7 more days.",
+    });
+  };
+
+  const returnBook = (bookId: number) => {
+    // In a real app, this would call an API
+    setBorrowedBooks(books => books.filter(book => book.id !== bookId));
+    
+    toast({
+      title: "Book Returned",
+      description: "Your book has been marked for return. Please drop it at the library.",
+    });
   };
 
   const cancelReservation = (reservationId: number) => {
     // In a real app, this would call an API
     setUpcomingReservations(reservations => reservations.filter(res => res.id !== reservationId));
+    
+    toast({
+      title: "Reservation Cancelled",
+      description: "Your seat reservation has been cancelled.",
+    });
+  };
+  
+  const browseBooks = () => {
+    navigate("/student-dashboard/books");
+  };
+  
+  const makeReservation = () => {
+    navigate("/student-dashboard/reservations");
   };
 
   return (
@@ -145,7 +178,9 @@ export default function StudentDashboard() {
                           <DropdownMenuItem onClick={() => renewBook(book.id)}>
                             Renew Book
                           </DropdownMenuItem>
-                          <DropdownMenuItem>Return Book</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => returnBook(book.id)}>
+                            Return Book
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
@@ -158,7 +193,7 @@ export default function StudentDashboard() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full" onClick={() => window.location.href = "/student-dashboard/books"}>
+              <Button variant="outline" className="w-full" onClick={browseBooks}>
                 Browse Books
               </Button>
             </CardFooter>
@@ -210,7 +245,7 @@ export default function StudentDashboard() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full gradient-button" onClick={() => window.location.href = "/student-dashboard/reservations"}>
+            <Button className="w-full gradient-button" onClick={makeReservation}>
               Make Reservation
             </Button>
           </CardFooter>

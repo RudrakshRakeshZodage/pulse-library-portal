@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Book, Filter, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,6 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { Navbar } from "@/components/Navbar";
-import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
 // Book types and mock data
@@ -37,7 +35,6 @@ interface Book {
 }
 
 export default function BookListingPage() {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [books, setBooks] = useState<Book[]>([]);
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
@@ -285,12 +282,8 @@ export default function BookListingPage() {
     setFilteredBooks(result);
   }, [searchQuery, departmentFilter, yearFilter, books]);
 
-  const handleIssueBook = (bookId: number) => {
-    // In a real app, this would call an API
-    toast({
-      title: "Request Submitted",
-      description: "Your book issue request has been sent to the librarian",
-    });
+  const handleViewDetails = () => {
+    navigate("/student-dashboard/books");
   };
 
   return (
@@ -303,7 +296,7 @@ export default function BookListingPage() {
             MSBTE Library Books
           </h1>
           <p className="text-muted-foreground">
-            Browse our collection of books for all departments and years.
+            Browse our collection of books for all departments and years. Sign in as a student to issue books.
           </p>
         </div>
 
@@ -407,12 +400,11 @@ export default function BookListingPage() {
                   </CardContent>
                   <CardFooter className="p-4 pt-0">
                     <Button 
-                      variant={book.available ? "default" : "outline"} 
-                      className={book.available ? "w-full gradient-button" : "w-full"}
-                      disabled={!book.available}
-                      onClick={() => handleIssueBook(book.id)}
+                      variant="outline" 
+                      className="w-full"
+                      onClick={handleViewDetails}
                     >
-                      {book.available ? "Issue Book" : "Currently Unavailable"}
+                      View Details
                     </Button>
                   </CardFooter>
                 </Card>
@@ -460,13 +452,12 @@ export default function BookListingPage() {
                       </div>
                       <p className="text-sm text-muted-foreground flex-1 mb-3">{book.description}</p>
                       <Button 
-                        variant={book.available ? "default" : "outline"} 
-                        className={book.available ? "self-end gradient-button" : "self-end"}
+                        variant="outline" 
+                        className="self-end"
                         size="sm"
-                        disabled={!book.available}
-                        onClick={() => handleIssueBook(book.id)}
+                        onClick={handleViewDetails}
                       >
-                        {book.available ? "Issue Book" : "Currently Unavailable"}
+                        View Details
                       </Button>
                     </div>
                   </div>

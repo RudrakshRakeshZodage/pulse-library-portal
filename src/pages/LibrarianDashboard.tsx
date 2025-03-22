@@ -8,10 +8,11 @@ import {
   Bookmark,
   Activity,
   Check,
-  X
+  X,
+  PlusCircle
 } from "lucide-react";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
   Tabs, 
@@ -36,11 +37,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 
 export default function LibrarianDashboard() {
   const { toast } = useToast();
@@ -63,7 +59,7 @@ export default function LibrarianDashboard() {
   const handleAddBook = () => {
     navigate("/librarian-dashboard/books");
     toast({
-      title: "Add Book",
+      title: "Book Management",
       description: "Navigated to book management page"
     });
   };
@@ -71,7 +67,7 @@ export default function LibrarianDashboard() {
   const handleAddStudent = () => {
     navigate("/librarian-dashboard/students");
     toast({
-      title: "Add Student",
+      title: "Student Management",
       description: "Navigated to student management page"
     });
   };
@@ -453,17 +449,17 @@ export default function LibrarianDashboard() {
           </CardContent>
         </Card>
 
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
           <Card className="flex-1">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <Button className="flex items-center justify-center gap-2 h-auto py-4" onClick={handleAddBook}>
-                <BookOpen className="h-4 w-4" />
+                <PlusCircle className="h-4 w-4" />
                 <div className="flex flex-col items-start">
-                  <span>Add New Book</span>
-                  <span className="text-xs font-normal">Catalog a new book</span>
+                  <span>Manage Books</span>
+                  <span className="text-xs font-normal">Add, edit or remove books</span>
                 </div>
               </Button>
               <Button variant="outline" className="flex items-center justify-center gap-2 h-auto py-4" onClick={handleAddStudent}>
@@ -488,6 +484,49 @@ export default function LibrarianDashboard() {
                 </div>
               </Button>
             </CardContent>
+          </Card>
+
+          <Card className="flex-1">
+            <CardHeader>
+              <CardTitle>Book Management</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="rounded-md bg-muted/50 p-4">
+                  <h3 className="text-sm font-medium mb-2">Total Books in Library</h3>
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-bold">1,254</span>
+                    <Button 
+                      className="gradient-button"
+                      onClick={handleAddBook}
+                    >
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add New Book
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-md bg-muted/50 p-4">
+                    <h3 className="text-sm font-medium mb-1">Books Available</h3>
+                    <span className="text-xl font-bold">987</span>
+                  </div>
+                  <div className="rounded-md bg-muted/50 p-4">
+                    <h3 className="text-sm font-medium mb-1">Books Issued</h3>
+                    <span className="text-xl font-bold">267</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleAddBook}
+              >
+                Manage All Books
+              </Button>
+            </CardFooter>
           </Card>
         </div>
       </div>
