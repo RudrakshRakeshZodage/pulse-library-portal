@@ -42,8 +42,8 @@ export default function BookListingPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [departmentFilter, setDepartmentFilter] = useState<string>("");
-  const [yearFilter, setYearFilter] = useState<string>("");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("all");
+  const [yearFilter, setYearFilter] = useState<string>("all");
 
   useEffect(() => {
     // Realistic polytechnic books data
@@ -274,11 +274,11 @@ export default function BookListingPage() {
       );
     }
 
-    if (departmentFilter) {
+    if (departmentFilter && departmentFilter !== "all") {
       result = result.filter(book => book.department === departmentFilter);
     }
 
-    if (yearFilter) {
+    if (yearFilter && yearFilter !== "all") {
       result = result.filter(book => book.year === yearFilter);
     }
 
@@ -325,7 +325,7 @@ export default function BookListingPage() {
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Departments</SelectItem>
+                  <SelectItem value="all">All Departments</SelectItem>
                   <SelectItem value="AI ML">AI ML</SelectItem>
                   <SelectItem value="CO">CO</SelectItem>
                   <SelectItem value="EJ">EJ</SelectItem>
@@ -338,7 +338,7 @@ export default function BookListingPage() {
                   <SelectValue placeholder="Year" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Years</SelectItem>
+                  <SelectItem value="all">All Years</SelectItem>
                   <SelectItem value="FY">First Year</SelectItem>
                   <SelectItem value="SY">Second Year</SelectItem>
                   <SelectItem value="TY">Third Year</SelectItem>
@@ -346,8 +346,8 @@ export default function BookListingPage() {
               </Select>
               <Button variant="outline" onClick={() => {
                 setSearchQuery("");
-                setDepartmentFilter("");
-                setYearFilter("");
+                setDepartmentFilter("all");
+                setYearFilter("all");
               }}>
                 <Filter className="mr-2 h-4 w-4" />
                 Clear Filters

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -131,9 +130,9 @@ export default function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [departmentFilter, setDepartmentFilter] = useState<string>("");
-  const [yearFilter, setYearFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("all");
+  const [yearFilter, setYearFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
   const [newUser, setNewUser] = useState({
     name: "",
@@ -167,15 +166,15 @@ export default function UserManagement() {
       );
     }
     
-    if (departmentFilter) {
+    if (departmentFilter && departmentFilter !== "all") {
       result = result.filter(user => user.department === departmentFilter);
     }
     
-    if (yearFilter) {
+    if (yearFilter && yearFilter !== "all") {
       result = result.filter(user => user.year === yearFilter);
     }
     
-    if (statusFilter) {
+    if (statusFilter && statusFilter !== "all") {
       result = result.filter(user => user.status === statusFilter);
     }
     
@@ -239,9 +238,9 @@ export default function UserManagement() {
   
   const clearFilters = () => {
     setSearchQuery("");
-    setDepartmentFilter("");
-    setYearFilter("");
-    setStatusFilter("");
+    setDepartmentFilter("all");
+    setYearFilter("all");
+    setStatusFilter("all");
   };
   
   const handlePageChange = (page: number) => {
@@ -364,7 +363,7 @@ export default function UserManagement() {
               <SelectValue placeholder="Department" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Departments</SelectItem>
+              <SelectItem value="all">All Departments</SelectItem>
               <SelectItem value="AI ML">AI ML</SelectItem>
               <SelectItem value="CO">CO</SelectItem>
               <SelectItem value="EJ">EJ</SelectItem>
@@ -378,7 +377,7 @@ export default function UserManagement() {
               <SelectValue placeholder="Year" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Years</SelectItem>
+              <SelectItem value="all">All Years</SelectItem>
               <SelectItem value="FYAN">First Year</SelectItem>
               <SelectItem value="FYCE">Second Year</SelectItem>
               <SelectItem value="TYCO">Third Year</SelectItem>
@@ -391,14 +390,14 @@ export default function UserManagement() {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Statuses</SelectItem>
+              <SelectItem value="all">All Statuses</SelectItem>
               <SelectItem value="Active">Active</SelectItem>
               <SelectItem value="Inactive">Inactive</SelectItem>
               <SelectItem value="Suspended">Suspended</SelectItem>
             </SelectContent>
           </Select>
           
-          {(departmentFilter || yearFilter || statusFilter) && (
+          {(departmentFilter !== "all" || yearFilter !== "all" || statusFilter !== "all") && (
             <Button variant="ghost" onClick={clearFilters} className="h-10 px-3">
               <XIcon className="h-4 w-4 mr-2" />
               Clear Filters
