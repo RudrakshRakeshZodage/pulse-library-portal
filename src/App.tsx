@@ -21,6 +21,8 @@ import BookListingPage from "./pages/BookListingPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import ReservationShowcase from "./pages/ReservationShowcase";
+import LibrarianBookManagement from "./pages/LibrarianBookManagement";
+import StudentBookManagement from "./pages/StudentBookManagement";
 
 const queryClient = new QueryClient();
 
@@ -45,13 +47,13 @@ const App = () => (
             <Route path="/student-dashboard" element={<StudentDashboard />} />
             <Route path="/student-dashboard/reservations" element={<SeatReservation />} />
             <Route path="/student-dashboard/payments" element={<PaymentPage />} />
-            <Route path="/student-dashboard/books" element={<BookListingPage />} />
+            <Route path="/student-dashboard/books" element={<StudentBookManagement />} />
             <Route path="/student-dashboard/*" element={<StudentDashboard />} />
             
             {/* Librarian Dashboard Routes */}
             <Route path="/librarian-dashboard" element={<LibrarianDashboard />} />
             <Route path="/librarian-dashboard/students" element={<UserManagement />} />
-            <Route path="/librarian-dashboard/books" element={<BookListingPage />} />
+            <Route path="/librarian-dashboard/books" element={<LibrarianBookManagement />} />
             <Route path="/librarian-dashboard/*" element={<LibrarianDashboard />} />
             
             {/* Catch-all Route */}
