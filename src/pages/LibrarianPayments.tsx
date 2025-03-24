@@ -378,13 +378,13 @@ export default function LibrarianPayments() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Select value={filterType || ""} onValueChange={(value) => setFilterType(value || null)}>
+            <Select value={filterType || "all"} onValueChange={(value) => setFilterType(value === "all" ? null : value)}>
               <SelectTrigger className="w-[180px]">
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Filter by type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Types</SelectItem>
+                <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="Late Fee">Late Fee</SelectItem>
                 <SelectItem value="Reservation Fee">Reservation Fee</SelectItem>
                 <SelectItem value="Membership Fee">Membership Fee</SelectItem>
