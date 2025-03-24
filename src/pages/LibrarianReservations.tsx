@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
@@ -29,6 +28,7 @@ import {
 import { Calendar, Clock, User, Check, X, Download, Filter, Info } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { format } from 'date-fns';
+import { exportToExcel } from '@/utils/exportUtils';
 
 // Define types
 interface SeatReservation {
@@ -119,10 +119,33 @@ export default function LibrarianReservations() {
   };
 
   const handleExport = () => {
-    toast({
-      title: "Export Started",
-      description: "Reservation data is being exported to Excel.",
-    });
+    try {
+      const exportData = reservations.map(reservation => ({
+        ID: reservation.id,
+        'Student Name': reservation.studentName,
+        'Student ID': reservation.studentId,
+        'Seat Number': reservation.seatNumber,
+        'Date': format(new Date(reservation.date), 'PPP'),
+        'Time Slot': reservation.timeSlot,
+        'Status': reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1),
+        'Purpose': reservation.purpose
+      }));
+      
+      exportToExcel(exportData, 'Library_Reservations');
+      
+      toast({
+        title: "Export Successful",
+        description: "Reservation data has been exported to Excel.",
+      });
+    } catch (error) {
+      console.error('Export failed:', error);
+      
+      toast({
+        title: "Export Failed",
+        description: "An error occurred while exporting the data.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleViewDetails = (reservation: SeatReservation) => {
