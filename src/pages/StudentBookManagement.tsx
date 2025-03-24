@@ -23,6 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast as sonnerToast } from 'sonner';
 
 // Book types
 type Department = "AI ML" | "CO" | "EJ" | "CIVIL" | "ME";
@@ -57,6 +58,7 @@ export default function StudentBookManagement() {
   const [yearFilter, setYearFilter] = useState<string>("all");
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
 
   useEffect(() => {
     // Fetch books data (using the comprehensive book list from BookListingPage)
@@ -189,6 +191,10 @@ export default function StudentBookManagement() {
   };
 
   const handleRequestBook = (bookId: number, bookTitle: string) => {
+    // Prevent double-clicking
+    if (isRequesting) return;
+    setIsRequesting(true);
+    
     // Check if book is already requested
     const alreadyRequested = myRequests.some(
       request => request.bookId === bookId && request.status === "pending"
@@ -199,6 +205,19 @@ export default function StudentBookManagement() {
         title: "Already Requested",
         description: "You've already requested this book and it's pending approval.",
       });
+      setIsRequesting(false);
+      return;
+    }
+
+    // Check if book is available
+    const book = books.find(b => b.id === bookId);
+    if (!book || !book.available) {
+      toast({
+        title: "Book Unavailable",
+        description: "This book is currently not available for request.",
+        variant: "destructive"
+      });
+      setIsRequesting(false);
       return;
     }
 
@@ -231,6 +250,12 @@ export default function StudentBookManagement() {
       title: "Book Requested",
       description: "Your request has been submitted to the librarian for approval.",
     });
+
+    sonnerToast.success('Book Requested Successfully', {
+      description: 'Your request has been submitted to the librarian for approval.'
+    });
+    
+    setIsRequesting(false);
   };
 
   const handleCancelRequest = (requestId: number) => {
@@ -259,6 +284,10 @@ export default function StudentBookManagement() {
     toast({
       title: "Request Cancelled",
       description: "Your book request has been cancelled.",
+    });
+
+    sonnerToast.success('Request Cancelled', {
+      description: 'Your book request has been cancelled successfully.'
     });
   };
 

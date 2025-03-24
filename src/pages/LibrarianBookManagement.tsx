@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import {
@@ -49,6 +48,8 @@ import {
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
+import { toast as sonnerToast } from 'sonner';
+import { exportToExcel } from '@/utils/exportUtils';
 
 // Define types
 interface Book {
@@ -220,6 +221,16 @@ export default function LibrarianBookManagement() {
 
   // Add new book
   const handleAddBook = () => {
+    // Validate required fields
+    if (!newBook.title || !newBook.author || !newBook.department || !newBook.publicationYear) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const bookId = books.length > 0 ? Math.max(...books.map((book) => book.id)) + 1 : 1;
     const addedBook = {
       id: bookId,
@@ -227,11 +238,16 @@ export default function LibrarianBookManagement() {
     };
 
     setBooks([...books, addedBook]);
+    setFilteredBooks([...filteredBooks, addedBook]);
     setIsAddDialogOpen(false);
 
     toast({
       title: 'Book Added',
       description: `${newBook.title} has been added to the library.`,
+    });
+
+    sonnerToast.success('Book Added Successfully', {
+      description: `${newBook.title} has been added to the library collection.`
     });
 
     // Reset form
@@ -252,16 +268,36 @@ export default function LibrarianBookManagement() {
   const handleEditBook = () => {
     if (!selectedBook) return;
 
+    // Validate required fields
+    if (!selectedBook.title || !selectedBook.author || !selectedBook.department) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const updatedBooks = books.map((book) =>
       book.id === selectedBook.id ? selectedBook : book
     );
 
     setBooks(updatedBooks);
+    setFilteredBooks(updatedBooks.filter(book => 
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      !searchQuery
+    ));
     setIsEditDialogOpen(false);
 
     toast({
       title: 'Book Updated',
       description: `${selectedBook.title} has been updated.`,
+    });
+
+    sonnerToast.success('Book Updated Successfully', {
+      description: `${selectedBook.title} has been updated in the library collection.`
     });
   };
 
@@ -271,16 +307,49 @@ export default function LibrarianBookManagement() {
 
     const updatedBooks = books.filter((book) => book.id !== selectedBook.id);
     setBooks(updatedBooks);
+    setFilteredBooks(updatedBooks.filter(book => 
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      !searchQuery
+    ));
     setIsDeleteDialogOpen(false);
+
+    // Check if any requests are associated with this book and update them
+    const associatedRequests = bookRequests.filter(req => req.bookId === selectedBook.id);
+    if (associatedRequests.length > 0) {
+      const updatedRequests = bookRequests.map(req => 
+        req.bookId === selectedBook.id ? {...req, status: 'rejected' as BookRequestStatus} : req
+      );
+      setBookRequests(updatedRequests);
+    }
 
     toast({
       title: 'Book Deleted',
       description: `${selectedBook.title} has been removed from the library.`,
     });
+
+    sonnerToast.success('Book Deleted Successfully', {
+      description: `${selectedBook.title} has been removed from the library collection.`
+    });
   };
 
   // Approve book request
   const handleApproveRequest = (requestId: number) => {
+    const requestToApprove = bookRequests.find(req => req.id === requestId);
+    if (!requestToApprove) return;
+
+    // Check if the book has available copies
+    const book = books.find(book => book.id === requestToApprove.bookId);
+    if (book && book.availableCopies <= 0) {
+      toast({
+        title: "Cannot Approve Request",
+        description: "There are no available copies of this book.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const updatedRequests = bookRequests.map((request) =>
       request.id === requestId ? { ...request, status: 'approved' as BookRequestStatus } : request
     );
@@ -296,6 +365,12 @@ export default function LibrarianBookManagement() {
         return book;
       });
       setBooks(updatedBooks);
+      setFilteredBooks(updatedBooks.filter(book => 
+        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        !searchQuery
+      ));
     }
 
     setBookRequests(updatedRequests);
@@ -303,6 +378,10 @@ export default function LibrarianBookManagement() {
     toast({
       title: 'Request Approved',
       description: `Book request has been approved.`,
+    });
+
+    sonnerToast.success('Request Approved', {
+      description: `The book request has been approved and the student has been notified.`
     });
   };
 
@@ -318,21 +397,47 @@ export default function LibrarianBookManagement() {
       title: 'Request Rejected',
       description: `Book request has been rejected.`,
     });
+
+    sonnerToast.success('Request Rejected', {
+      description: `The book request has been rejected and the student has been notified.`
+    });
   };
 
   // Export books data
   const handleExportBooks = () => {
+    const formattedData = books.map(book => ({
+      'Title': book.title,
+      'Author': book.author,
+      'Department': book.department,
+      'Publication Year': book.publicationYear,
+      'ISBN': book.isbn,
+      'Total Copies': book.copies,
+      'Available Copies': book.availableCopies
+    }));
+
+    exportToExcel(formattedData, 'Library_Books');
+
     toast({
-      title: 'Export Started',
-      description: 'Books data is being exported to Excel.',
+      title: 'Export Completed',
+      description: 'Books data has been exported to Excel.',
     });
   };
 
   // Export requests data
   const handleExportRequests = () => {
+    const formattedData = bookRequests.map(request => ({
+      'Student Name': request.studentName,
+      'Student ID': request.studentId,
+      'Book Title': request.bookTitle,
+      'Request Date': request.requestDate,
+      'Status': request.status.charAt(0).toUpperCase() + request.status.slice(1)
+    }));
+
+    exportToExcel(formattedData, 'Book_Requests');
+
     toast({
-      title: 'Export Started',
-      description: 'Book requests data is being exported to Excel.',
+      title: 'Export Completed',
+      description: 'Book requests data has been exported to Excel.',
     });
   };
 
