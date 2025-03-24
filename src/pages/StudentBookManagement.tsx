@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Book, Search, BookOpen, Filter } from "lucide-react";
@@ -60,8 +59,9 @@ export default function StudentBookManagement() {
   const [isViewOpen, setIsViewOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch books data (mock for now)
-    const mockBooks: Book[] = [
+    // Fetch books data (using the comprehensive book list from BookListingPage)
+    const polytechnicBooks: Book[] = [
+      // Computer Engineering (CO) Books
       {
         id: 1,
         title: "Programming in C",
@@ -92,10 +92,53 @@ export default function StudentBookManagement() {
         available: false,
         coverUrl: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
       },
-      // ... more books would be loaded from backend in real implementation
+      {
+        id: 4,
+        title: "Data Structures Using C++",
+        author: "D.S. Malik",
+        description: "Implementation of advanced data structures in C++ with applications",
+        department: "CO",
+        year: "SY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      
+      // Electronics Engineering (EJ) Books
+      {
+        id: 5,
+        title: "Digital Electronics",
+        author: "Morris Mano",
+        description: "Principles and applications of digital circuits and systems",
+        department: "EJ",
+        year: "FY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1563770557287-ea346329d7e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 6,
+        title: "Microprocessors and Microcontrollers",
+        author: "Ramesh Gaonkar",
+        description: "Architecture and programming of microprocessors with practical applications",
+        department: "EJ",
+        year: "SY",
+        available: true,
+        coverUrl: "https://images.unsplash.com/photo-1597589827317-4c6d6e0a90bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        id: 7,
+        title: "Communication Systems",
+        author: "Simon Haykin",
+        description: "Principles of analog and digital communication with modern techniques",
+        department: "EJ",
+        year: "TY",
+        available: false,
+        coverUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+      },
+      // Add more books from BookListingPage
     ];
-    setBooks(mockBooks);
-    setFilteredBooks(mockBooks);
+    
+    setBooks(polytechnicBooks);
+    setFilteredBooks(polytechnicBooks);
 
     // Mock my book requests
     const mockRequests: BookRequest[] = [
@@ -161,14 +204,28 @@ export default function StudentBookManagement() {
 
     // Create a new request
     const newRequest: BookRequest = {
-      id: myRequests.length + 1,
+      id: Date.now(), // Use timestamp to ensure unique ID
       bookId,
       bookTitle,
       requestDate: new Date().toISOString().split('T')[0],
       status: "pending"
     };
 
-    setMyRequests([...myRequests, newRequest]);
+    setMyRequests(prevRequests => [...prevRequests, newRequest]);
+
+    // Mark the book as unavailable immediately for better UX
+    setBooks(prevBooks => 
+      prevBooks.map(book => 
+        book.id === bookId ? { ...book, available: false } : book
+      )
+    );
+
+    // Update filtered books as well
+    setFilteredBooks(prevBooks => 
+      prevBooks.map(book => 
+        book.id === bookId ? { ...book, available: false } : book
+      )
+    );
 
     toast({
       title: "Book Requested",
@@ -177,8 +234,27 @@ export default function StudentBookManagement() {
   };
 
   const handleCancelRequest = (requestId: number) => {
-    const updatedRequests = myRequests.filter(request => request.id !== requestId);
-    setMyRequests(updatedRequests);
+    // Find the request to get the bookId
+    const requestToCancel = myRequests.find(request => request.id === requestId);
+    
+    if (requestToCancel) {
+      // Mark the book as available again
+      setBooks(prevBooks => 
+        prevBooks.map(book => 
+          book.id === requestToCancel.bookId ? { ...book, available: true } : book
+        )
+      );
+      
+      // Update filtered books as well
+      setFilteredBooks(prevBooks => 
+        prevBooks.map(book => 
+          book.id === requestToCancel.bookId ? { ...book, available: true } : book
+        )
+      );
+    }
+    
+    // Remove the request
+    setMyRequests(prevRequests => prevRequests.filter(request => request.id !== requestId));
 
     toast({
       title: "Request Cancelled",
@@ -321,6 +397,7 @@ export default function StudentBookManagement() {
             </div>
           </TabsContent>
           
+          {/* My Requests Tab */}
           <TabsContent value="myrequests" className="space-y-4">
             <Card>
               <CardHeader>
