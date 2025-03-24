@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Navbar } from "@/components/Navbar";
+import { NavbarWithoutRouter } from "@/components/NavbarWithoutRouter";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, Info } from "lucide-react";
@@ -51,7 +51,7 @@ const ReservationShowcase = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <NavbarWithoutRouter />
       
       <main className="flex-1 px-4 py-12">
         <div className="container mx-auto space-y-8">

@@ -1,8 +1,7 @@
-
 import { useNavigate } from "react-router-dom";
 import { Book, CreditCard, CalendarCheck, User, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/Navbar";
+import { NavbarWithoutRouter } from "@/components/NavbarWithoutRouter";
 import { Logo } from "@/components/Logo";
 import { FeatureCard } from "@/components/FeatureCard";
 
@@ -11,7 +10,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <NavbarWithoutRouter />
       
       {/* Hero Section */}
       <section className="py-12 md:py-24 lg:py-32 xl:py-36 px-4 relative overflow-hidden">
